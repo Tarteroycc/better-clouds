@@ -447,11 +447,12 @@ public class Renderer implements AutoCloseable {
         float sunAxisY = MathHelper.sin(sunPathAngleRad);
         float sunAxisZ = MathHelper.cos(sunPathAngleRad);
         Vector3f sunDir = tempVector.set(1, 0, 0).rotateAxis(skyAngleRad + MathHelper.HALF_PI, 0, sunAxisY, sunAxisZ);
+        float dayTime = world.getTimeOfDay() % 24000;
+        float mappedTime = mapTimeOfDay(dayTime, config.preset().sunriseStartTime, config.preset().sunriseEndTime, config.preset().sunsetStartTime, config.preset().sunsetEndTime);
 
-        // TODO: fit light gradient rotation to configured sunset / sunrise values. Solas shader looks weird at sunset
         res.shadingShader().bind();
         res.shadingShader().uVPMatrix.setMat4(rotationProjectionMatrix);
-        res.shadingShader().uSunDirection.setVec4(sunDir.x, sunDir.y, sunDir.z, (world.getTimeOfDay() % 24000) / 24000f);
+        res.shadingShader().uSunDirection.setVec4(sunDir.x, sunDir.y, sunDir.z, mappedTime / 24000f);
         res.shadingShader().uSunAxis.setVec3(0, sunAxisY, sunAxisZ);
         res.shadingShader().uOpacity.setVec3(config.preset().opacity, config.preset().opacityFactor, config.preset().opacityExponent);
         res.shadingShader().uColorGrading.setVec4(brightness, 1f / config.preset().gamma(), effectLuma, config.preset().saturation);
@@ -531,7 +532,36 @@ public class Renderer implements AutoCloseable {
         }
     }
 
-    private float smoothstep(float x, float e0, float e1) {
+    private float mapTimeOfDay(float time, float riseStart, float riseEnd, float setStart, float setEnd) {
+        if (time <= 6000 || time > 18000) {
+            // sunrise time
+            if (time > 18000) time -= 24000;
+            if(time < riseStart) {
+                time = map(time, -6000, riseStart, -6000, -785);
+            } else if (time > riseEnd) {
+                time = map(time, riseEnd, 6000, 1163, 6000);
+            } else {
+                time = map(time, riseStart, riseEnd, -785, 1163);
+            }
+        } else {
+            // sunset time
+            if(time < setStart) {
+                time = map(time, 6000, setStart, 6000, 10837);
+            } else if (time > setEnd) {
+                time = map(time, setEnd, 18000, 12785, 18000);
+            } else {
+                time = map(time, setStart, setEnd, 10837, 12785);
+            }
+        }
+        return time;
+    }
+
+    private static float map(float x, float fromMin, float fromMax, float toMin, float toMax) {
+        float f = (x - fromMin) / (fromMax - fromMin);
+        return f * (toMax - toMin) + toMin;
+    }
+
+    private static float smoothstep(float x, float e0, float e1) {
         x = MathHelper.clamp((x - e0) / (e1 - e0), 0, 1);
         return x * x * (3 - 2 * x);
     }
