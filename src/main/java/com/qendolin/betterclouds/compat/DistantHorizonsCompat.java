@@ -27,8 +27,8 @@ public abstract class DistantHorizonsCompat {
         boolean isVersion3 = false;
         try {
             Class.forName("com.seibel.distanthorizons.api.DhApi");
-            isVersion2 = DhApi.getModVersion().startsWith("2.");
-            isVersion3 = DhApi.getModVersion().startsWith("3.");
+            isVersion2 = DhApi.getApiMajorVersion() == 2;
+            isVersion3 = DhApi.getApiMajorVersion() == 3;
         } catch (ClassNotFoundException e) {
             isLoaded = false;
         }

@@ -140,7 +140,7 @@ dependencies {
 		}
 	}
 
-	compileOnly project.rootProject.files("libraries/DistantHorizonsApi-3.0.0-nightly-377f7d23.jar")
+	compileOnly "maven.modrinth:distanthorizonsapi:3.0.0"
 }
 
 processResources {
