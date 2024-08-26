@@ -145,5 +145,11 @@
   "betterclouds.config.entry.sunPathAngle.description": "Нахил осі сонця/місяця, для сумісності з шейдерами, які підтримують цю опцію",
   "betterclouds.config.entry.upscaleResolutionFactor": "Підвищена роздільна здатність",
   "betterclouds.config.entry.upscaleResolutionFactor.description": "Роздільна здатність, яка використовується для масштабування, для сумісності з шейдерами, що підтримують TAAU",
-  "betterclouds.config.text.shaders": "§4Підтримка шейдерів є експериментальною!\nДеякі шейдери працюють, інші ні.\nКраще вимкнути хмари у налаштуваннях пакета шейдерів або встановити для них значення ваніль, якщо є така можливість.\nВи можете погратися з налаштуваннями кольорів нижче, якщо хмари виглядають не так, як треба."
+  "betterclouds.config.text.shaders": "§4Підтримка шейдерів є експериментальною!\nДеякі шейдери працюють, інші ні.\nКраще вимкнути хмари у налаштуваннях пакета шейдерів або встановити для них значення ваніль, якщо є така можливість.\nВи можете погратися з налаштуваннями кольорів нижче, якщо хмари виглядають не так, як треба.",
+  "betterclouds.message.hwMaybeIncompatible": "§c§l[!]§r Some users of Better Clouds have reported issues with your CPU / GPU Model (§o%s§r with §o%s§r).",
+  "betterclouds.config.group.shaders.misc": "Miscellaneous",
+  "betterclouds.config.entry.useFrustumCulling": "Frustum Culling",
+  "betterclouds.config.entry.useFrustumCulling.description": "Improves Performance",
+  "betterclouds.config.entry.worldCurvatureSize": "World Curvature",
+  "betterclouds.config.entry.worldCurvatureSize.description": "Enables world curvature and disables frustum culling.\n§e§nNote:§r\nIf world curvature is enabled in your shader, but not in Better Clouds then you must manually disable 'Frustum Culling' in the 'Performance' settings."
 }
