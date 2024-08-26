@@ -128,13 +128,16 @@ dependencies {
 		// It causes NoClassDefFoundErrors due to the different mappings.
 		// This is a workaround that uses 'modLocalRuntime' to remap the mods found in the 'mods-forge' directory.
 		// It requires a project reload when the mods change.
-		def localModsDir = project.rootProject.file('./run/mods-forge/')
-		if (localModsDir.exists() && localModsDir.isDirectory()) {
-			def localMods = localModsDir
-					.listFiles({ file -> file.isFile() && file.name.endsWith('.jar') } as FileFilter)
-			localMods.each { mod ->
-				dependencies {
-					modLocalRuntime files(mod)
+		if(stonecutter.current.isActive) {
+			def localModsDir = project.rootProject.file('./run/mods-forge/')
+			if (localModsDir.exists() && localModsDir.isDirectory()) {
+				def localMods = localModsDir
+						.listFiles({ file -> file.isFile() && file.name.endsWith('.jar') } as FileFilter)
+				localMods.each { mod ->
+					println "Added Forge Mod: " + mod.name
+					dependencies {
+						modLocalRuntime files(mod)
+					}
 				}
 			}
 		}
