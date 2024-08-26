@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+// This mixin exists for compat with sodium extras
 @Mixin(value = DimensionEffects.Overworld.class, priority = 1100)
 public abstract class DimensionEffectsOverworldMixin extends DimensionEffects {
     public DimensionEffectsOverworldMixin(float cloudsHeight, boolean alternateSkyColor, SkyType skyType, boolean brightenLighting, boolean darkened) {
@@ -17,9 +18,8 @@ public abstract class DimensionEffectsOverworldMixin extends DimensionEffects {
     @SuppressWarnings({"UnresolvedMixinReference", "MixinAnnotationTarget"})
     @ModifyReturnValue(method = "getCloudsHeight", at = @At("RETURN"), expect = 0, require = 0)
     public float addCloudsYOffset(float value) {
-        if(Main.getConfig().enabled) {
-            value += Main.getConfig().yOffset;
-        }
-        return value;
+        if(!Main.getConfig().enabled) return value;
+
+        return value + Main.getConfig().yOffset;
     }
 }
