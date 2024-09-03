@@ -15,11 +15,11 @@ public abstract class DimensionEffectsOverworldMixin extends DimensionEffects {
         super(cloudsHeight, alternateSkyColor, skyType, brightenLighting, darkened);
     }
 
+    // Note: getCloudsHeight doesn't exist at compile time. Because of that, the full descriptor is required.
     @SuppressWarnings({"UnresolvedMixinReference", "MixinAnnotationTarget"})
-    @ModifyReturnValue(method = "getCloudsHeight", at = @At("RETURN"), expect = 0, require = 0)
-    public float addCloudsYOffset(float value) {
+    @ModifyReturnValue(method = "getCloudsHeight()F", at = @At("RETURN"), expect = 0, require = 0)
+    private float addCloudsYOffset(float value) {
         if(!Main.getConfig().enabled) return value;
-
         return value + Main.getConfig().yOffset;
     }
 }

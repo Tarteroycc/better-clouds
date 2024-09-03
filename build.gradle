@@ -70,7 +70,7 @@ repositories {
 }
 
 loom {
-	accessWidenerPath = project.rootProject.file("src/main/resources/betterclouds.accesswidener")
+	accessWidenerPath.set(project.rootProject.file("src/main/resources/betterclouds.accesswidener"))
 
 	runConfigs.configureEach {
 		ideConfigGenerated true
@@ -184,6 +184,13 @@ stonecutter {
 		withSourcesJar()
 		sourceCompatibility = j21 ? JavaVersion.VERSION_21 : JavaVersion.VERSION_17
 		targetCompatibility = j21 ? JavaVersion.VERSION_21 : JavaVersion.VERSION_17
+	}
+}
+
+if (stonecutter.current.isActive) {
+	rootProject.tasks.register("buildActive") {
+		group = "project"
+		dependsOn(tasks.named("build"))
 	}
 }
 
