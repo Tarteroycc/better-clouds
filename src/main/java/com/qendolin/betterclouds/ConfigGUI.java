@@ -137,11 +137,11 @@ public class ConfigGUI {
             .build();
         this.yRange = createOption(float.class, "yRange")
             .binding(defaults.yRange, () -> config.yRange, val -> config.yRange = val)
-            .customController(opt -> new FloatSliderController(opt, 0, 128, 0.5f))
+            .customController(opt -> new FloatSliderController(opt, 0, 265, 1))
             .build();
         this.yOffset = createOption(float.class, "yOffset")
             .binding(defaults.yOffset, () -> config.yOffset, val -> config.yOffset = val)
-            .customController(opt -> new FloatSliderController(opt, -64, 256, 8))
+            .customController(opt -> new FloatSliderController(opt, -384, 256, 8))
             .build();
         this.samplingScale = createOption(float.class, "samplingScale")
             .binding(defaults.samplingScale, () -> config.samplingScale, val -> config.samplingScale = val)
