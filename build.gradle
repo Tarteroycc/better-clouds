@@ -70,7 +70,7 @@ repositories {
 }
 
 loom {
-	accessWidenerPath = project.rootProject.file("src/main/resources/betterclouds.accesswidener")
+	accessWidenerPath.set(project.rootProject.file("src/main/resources/betterclouds.accesswidener"))
 
 	runConfigs.configureEach {
 		ideConfigGenerated true
@@ -128,19 +128,22 @@ dependencies {
 		// It causes NoClassDefFoundErrors due to the different mappings.
 		// This is a workaround that uses 'modLocalRuntime' to remap the mods found in the 'mods-forge' directory.
 		// It requires a project reload when the mods change.
-		def localModsDir = project.rootProject.file('./run/mods-forge/')
-		if (localModsDir.exists() && localModsDir.isDirectory()) {
-			def localMods = localModsDir
-					.listFiles({ file -> file.isFile() && file.name.endsWith('.jar') } as FileFilter)
-			localMods.each { mod ->
-				dependencies {
-					modLocalRuntime files(mod)
+		if(stonecutter.current.isActive) {
+			def localModsDir = project.rootProject.file('./run/mods-forge/')
+			if (localModsDir.exists() && localModsDir.isDirectory()) {
+				def localMods = localModsDir
+						.listFiles({ file -> file.isFile() && file.name.endsWith('.jar') } as FileFilter)
+				localMods.each { mod ->
+					println "Added Forge Mod: " + mod.name
+					dependencies {
+						modLocalRuntime files(mod)
+					}
 				}
 			}
 		}
 	}
 
-	compileOnly project.rootProject.files("libraries/DistantHorizonsApi-3.0.0-nightly-377f7d23.jar")
+	compileOnly "maven.modrinth:distanthorizonsapi:3.0.0"
 }
 
 processResources {
@@ -181,6 +184,13 @@ stonecutter {
 		withSourcesJar()
 		sourceCompatibility = j21 ? JavaVersion.VERSION_21 : JavaVersion.VERSION_17
 		targetCompatibility = j21 ? JavaVersion.VERSION_21 : JavaVersion.VERSION_17
+	}
+}
+
+if (stonecutter.current.isActive) {
+	rootProject.tasks.register("buildActive") {
+		group = "project"
+		dependsOn(tasks.named("build"))
 	}
 }
 

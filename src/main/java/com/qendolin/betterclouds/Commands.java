@@ -159,6 +159,8 @@ public class Commands {
                         Main.debugChatMessage("updatedPreferences");
                         return 1;
                     }))));
+        // rendedoc can't be loaded before opengl context creation on forge
+        //? if fabric {
         dispatcher.register(literal(Main.MODID + ":debug")
             .then(literal("renderdoc")
                 .then(literal("capture")
@@ -271,7 +273,7 @@ public class Commands {
                             });
                             return 1;
                         })))));
-
+        //?}
     }
 
     private enum FallbackArgument implements StringIdentifiable {

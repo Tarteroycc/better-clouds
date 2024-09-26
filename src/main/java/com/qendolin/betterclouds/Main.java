@@ -36,14 +36,15 @@ public class Main {
     public static final boolean IS_CLIENT = ModLoader.isClientEnvironment();
     public static final NamedLogger LOGGER = new NamedLogger(LogManager.getLogger(MODID), !IS_DEV);
 
-    public static GLCompat glCompat;
-    public static ModVersion version;
+    public static GLCompat glCompat = null;
+    public static ModVersion version = null;
 
     private static final Path CONFIG_PATH = ModLoader.getConfigDir().resolve("betterclouds-v1.json");
     private static ConfigClassHandler<Config> config;
     private static boolean isInitialized = false;
 
     public static void initGlCompat() {
+        LOGGER.info("Initializing OpenGL compat");
         try {
             glCompat = new GLCompat(IS_DEV);
         } catch (Exception e) {
@@ -65,6 +66,8 @@ public class Main {
                 LOGGER.info("- Using {} fallback", fallback);
             }
         }
+
+        sendSystemDetailsTelemetry();
     }
 
     public static Config getConfig() {
@@ -123,18 +126,17 @@ public class Main {
         if (!IS_CLIENT)
             throw new IllegalStateException("Minecraft environment is not 'client' but the client initializer was called");
         if(isInitialized) return;
+        isInitialized = true;
 
         initConfig();
         loadConfig();
-
-        sendSystemDetailsTelemetry();
 
         version = ModLoader.getModVersion(MODID);
 
         DistantHorizonsCompat.initialize();
         IrisCompat.initialize();
 
-        isInitialized = true;
+        sendSystemDetailsTelemetry();
 
         if (!IS_DEV) return;
         LOGGER.info("Initialized in dev mode, performance might vary");
@@ -202,6 +204,8 @@ public class Main {
     }
 
     private static void sendSystemDetailsTelemetry() {
+        if(!isInitialized || glCompat == null) return;
+
         if (getConfig().lastTelemetryVersion >= Telemetry.VERSION) return;
         Telemetry.INSTANCE.sendSystemInfo()
             .whenComplete((success, throwable) -> {

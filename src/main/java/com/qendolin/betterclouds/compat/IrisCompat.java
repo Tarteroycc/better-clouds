@@ -3,6 +3,9 @@ package com.qendolin.betterclouds.compat;
 import com.qendolin.betterclouds.platform.ModLoader;
 
 public abstract class IrisCompat {
+
+    public static final boolean IS_LOADED = ModLoader.isModLoaded("iris");
+
     private static IrisCompat instance;
 
     public static void initialize() {
